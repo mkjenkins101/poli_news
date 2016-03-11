@@ -14,6 +14,18 @@ function incrementVotes(obj,incDec){
 		obj.votes -= 1;
 };
 
+// Regex test if usergiven url has protocol. Appends
+// unsecure http if none provided by user
+function scopeLink($scope) {
+	var url = '';
+	if (/^https?:\/\//i.test($scope.link) || /^http?:\/\//i.test($scope.link)) {
+    url = $scope.link;
+  } else {  
+    url = 'http://' + $scope.link;
+  }   
+	return url;
+};
+
 ///////////////////////////////////////////////////////
 // PoliNews callbacks - Factory, Controllers, Config // 
 ///////////////////////////////////////////////////////
@@ -30,7 +42,7 @@ function mainController($scope,posts) {
 		if (!$scope.title || $scope.title === '') { return; }
 		$scope.posts.push({
 			title: $scope.title, 
-			link: $scope.link, 
+			link: scopeLink($scope), 
 			votes: 0,
 			comments: []
 		});
@@ -80,4 +92,3 @@ app.config(['$stateProvider','$urlRouterProvider',mainConfig]);
 app.factory('posts', [mainFactory]);
 app.controller('MainCtrl', ['$scope','posts',mainController]);
 app.controller('PostsCtrl', ['$scope','$stateParams','posts',postsController]);
-

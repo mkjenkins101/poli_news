@@ -9,20 +9,23 @@
 <body ng-app="poliNews">
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
+			<!-- renders template -->
 			<ui-view></ui-view>
 		</div>
 	</div>
-
+	<!------------------->
+	<!-- Home Template -->
+	<!------------------->
 	<script type="text/ng-template" id="/home.html">
 		<div class="page-header">
-			<h1>Poli News Mitch</h1>
+			<h1>Poli News</h1>
 		</div>
     <div ng-repeat="post in posts | orderBy:'-votes'">
       <span class="glyphicon glyphicon-thumbs-up" ng-click="incrementVotes(post,'inc')"></span>
       <span class="glyphicon glyphicon-thumbs-down" ng-click="incrementVotes(post,'dec')"></span>
       {{post.votes}}
       <span style="font-size:20px; margin-left:10px;">
-        <a ng-show="post.link" href="{{post.link}}">
+        <a ng-show="post.link" href="{{post.link}}" target="_blank">
           {{post.title}}
         </a>
         <span ng-hide="post.link">
@@ -30,10 +33,13 @@
         </span>
       </span>
 			<span>
-  			<a href="#/posts/{{$index}}">Comments</a>
+				<!-- Keeps comments link in post vote order -->
+  			<a href="#/posts/{{posts.indexOf(post)}}">Comments</a>
 			</span>
     </div>
-
+		<!--------------->
+		<!-- Home Form -->
+		<!--------------->
     <form ng-submit="addPost()" style="margin-top:30px;">
       <h3>Add a new post</h3>
       <div class="form-group">
@@ -45,6 +51,9 @@
       <button type="submit" class="btn btn-primary">Post</button>
     </form>
 	</script>
+	<!-------------------->
+	<!-- Posts Template -->
+	<!-------------------->
 	<script type="text/ng-template" id="/posts.html">
   	<div class="page-header">
     	<h3>
@@ -67,6 +76,9 @@
 		<span>
   		<a href="#/home">Home</a>
 		</span>
+		<!---------------->
+		<!-- Posts Form -->
+		<!---------------->
 		<form ng-submit="addComment()" style="margin-top:30px;">
     	<h3>Add a new comment</h3>
     	<div class="form-group">
