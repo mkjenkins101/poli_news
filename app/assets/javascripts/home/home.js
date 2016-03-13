@@ -2,14 +2,14 @@
 //= require ../main.js
 
 // Home constructor - Controller
-poliNews.controller('HomeCtrl', ['$scope','posts',homeController]);
+poliNews.controller('HomeCtrl', ['$scope', 'posts', homeController]);
 
 // Home Controller
-function homeController($scope,posts) {
+function homeController($scope, posts) {
 	$scope.posts = posts.posts;
 	$scope.addPost = function(){
 		if (!$scope.title || $scope.title === '') { return; }
-		$scope.posts.push({
+		posts.create({
 			title: $scope.title, 
 			link: scopeLink($scope), 
 			votes: 0,

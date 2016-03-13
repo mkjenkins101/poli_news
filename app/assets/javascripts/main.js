@@ -5,17 +5,22 @@
 //////////////////////////////////////////////////////
 
 // PoliNews()
-var poliNews = angular.module('poliNews', ['ui.router','templates']);
+var poliNews = angular.module('poliNews', ['ui.router', 'templates']);
 
 // Poli News constructor - Config
-poliNews.config(['$stateProvider','$urlRouterProvider',poliNewsConfig]);
+poliNews.config(['$stateProvider', '$urlRouterProvider', poliNewsConfig]);
 
 // Main Config
-function poliNewsConfig($stateProvider,$urlRouterProvider) {
+function poliNewsConfig($stateProvider, $urlRouterProvider) {
 	var $home = {
 		url: '/home',
 		templateUrl: 'home/_home.html',
-		controller: 'HomeCtrl'
+		controller: 'HomeCtrl',
+		resolve: {
+			postPromise: ['posts', function(posts){
+    		return posts.getAll();
+  		}]
+		}
 	};
 	var $posts = {
 		url: '/posts/{id}',
@@ -28,7 +33,7 @@ function poliNewsConfig($stateProvider,$urlRouterProvider) {
 };
 
 // incrementVotes function [home/home.js, posts/posts.js]
-function incrementVotes(obj,incDec){
+function incrementVotes(obj, incDec){
 	if (incDec == 'inc')
 		obj.votes += 1;
 	if (incDec == 'dec')

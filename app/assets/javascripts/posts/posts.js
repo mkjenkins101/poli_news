@@ -2,16 +2,27 @@
 //= require ../main.js
 
 // Posts constructors - Factory, Controller
-poliNews.factory('posts', [postsFactory]);
-poliNews.controller('PostsCtrl', ['$scope','$stateParams','posts',postsController]);
+poliNews.factory('posts', ['$http', postsFactory]);
+poliNews.controller('PostsCtrl', ['$scope', '$stateParams', 'posts', postsController]);
 
 // Posts Factory
-function postsFactory() {
-	return { posts: [] };
+function postsFactory($http) {
+	var o = { posts: [] };
+	o.getAll = function() {
+    return $http.get('/posts.json').success(function(data) {
+      angular.copy(data, o.posts);
+    });
+  };	
+	o.create = function(post) {
+		return $http.post('/posts.json', post).success(function(data) {
+			o.posts.push(data);	
+		});
+	};
+	return o;
 };
 
 // Posts Controller
-function postsController($scope,$stateParams,posts) {
+function postsController($scope, $stateParams, posts) {
 	$scope.post = posts.posts[$stateParams.id];
 	$scope.addComment = function() {
 		if ($scope.body === '') { return; };
