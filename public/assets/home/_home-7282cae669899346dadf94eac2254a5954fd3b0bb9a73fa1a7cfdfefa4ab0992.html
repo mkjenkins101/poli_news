@@ -1,0 +1,36 @@
+<!-- ################################### -->
+<!-- ##         Home Template         ## -->
+<!-- ################################### -->
+<div class="page-header">
+	<h1>Poli News</h1>
+</div>
+<div ng-repeat="post in posts | orderBy:'-votes'">
+  <span class="glyphicon glyphicon-thumbs-up" ng-click="incrementVotes(post,'inc')"></span>
+  <span class="glyphicon glyphicon-thumbs-down" ng-click="incrementVotes(post,'dec')"></span>
+  {{post.votes}}
+  <span style="font-size:20px; margin-left:10px;">
+    <a ng-show="post.link" href="{{post.link}}" target="_blank">
+      {{post.title}}
+    </a>
+    <span ng-hide="post.link">
+      {{post.title}}
+    </span>
+  </span>
+	<span>
+		<!-- Keeps comments link in post vote order -->
+  	<a href="#/posts/{{posts.indexOf(post)}}">Comments</a>
+	</span>
+</div>
+<!-- ################################### -->
+<!-- ##           Home Form           ## -->
+<!-- ################################### -->
+<form ng-submit="addPost()" style="margin-top:30px;">
+	<h3>Add a new post</h3>
+	<div class="form-group">
+   	<input type="text" class="form-control" placeholder="Title" ng-model="title"></input>
+  </div>
+ 	<div class="form-group">
+		<input type="text" class="form-control" placeholder="Link" ng-model="link"></input>
+	</div>
+	<button type="submit" class="btn btn-primary">Post</button>
+</form>
