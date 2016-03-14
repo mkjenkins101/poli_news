@@ -19,7 +19,10 @@ function homeController($scope, posts) {
 		$scope.link = '';
 	};
 	// incrementVotes() - main.js
-	$scope.incrementVotes = incrementVotes;
+	$scope.incrementVotes = function(post, incDec) {
+		// posts.js postFactory function o.vote
+		posts.vote(post, incDec);
+	};
 };
 
 // Regex test if usergiven url has protocol. Appends

@@ -18,6 +18,12 @@ function postsFactory($http) {
 			o.posts.push(data);	
 		});
 	};
+	o.vote = function(post, incDec) {
+		// pass param incDec to rails vote
+		return $http.put('/posts/' + post.id + '/vote.json', {incDec: incDec}).success(function(data) {
+			post.vote = incrementVotes(post, incDec);
+		});
+	};
 	return o;
 };
 
@@ -34,5 +40,5 @@ function postsController($scope, $stateParams, posts) {
 		$scope.body = '';
 	}; 
 	// incrementVotes() - main.js
-	$scope.incrementVotes = incrementVotes;
+	$scope.incrementVotes = incrementVotes; 
 };

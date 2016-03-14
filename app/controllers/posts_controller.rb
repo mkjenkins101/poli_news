@@ -13,7 +13,11 @@ class PostsController < ApplicationController
 	end
 
 	def vote
-		respond_with post_find.increment!(:votes) 
+		if params[:incDec] == 'inc'
+			respond_with post_find.increment!(:votes) 
+		else
+			respond_with post_find.decrement!(:votes) 
+		end
 	end
 
 	def post_find
@@ -22,7 +26,7 @@ class PostsController < ApplicationController
 
 	private
 	def post_params 
-		params.require(:post).permit(:link, :title)
+		params.require(:post).permit(:link, :title, :votes)
 	end
 
 end
