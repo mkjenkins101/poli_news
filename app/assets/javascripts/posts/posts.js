@@ -3,11 +3,16 @@
 
 // Posts constructors - Factory, Controller
 poliNews.factory('posts', ['$http', postsFactory]);
-poliNews.controller('PostsCtrl', ['$scope', '$stateParams', 'posts', postsController]);
+poliNews.controller('PostsCtrl', ['$scope', 'posts', 'post', postsController]);
 
 // Posts Factory
 function postsFactory($http) {
 	var o = { posts: [] };
+	o.get = function(id) {
+		return $http.get('/posts/' + id + '.json').then(function(res){
+  		return res.data;
+		});
+	};
 	o.getAll = function() {
     return $http.get('/posts.json').success(function(data) {
       angular.copy(data, o.posts);
@@ -24,21 +29,34 @@ function postsFactory($http) {
 			post.vote = incrementVotes(post, incDec);
 		});
 	};
+	o.addComment = function(id, comment) {
+		return $http.post('/posts/' + id + '/comments.json', comment);
+	};
+	o.commentVote = function(post, comment, incDec) {
+		console.log(incDec);
+		return $http.put('/posts/' + post.id + '/comments/' + comment.id + '/vote.json', {incDec: incDec}).success(function(data) {
+			post.vote = incrementVotes(comment, incDec);
+		}); 
+	};
 	return o;
 };
 
 // Posts Controller
-function postsController($scope, $stateParams, posts) {
-	$scope.post = posts.posts[$stateParams.id];
+function postsController($scope, posts, post) {
+	$scope.post = post;
 	$scope.addComment = function() {
 		if ($scope.body === '') { return; };
-		$scope.post.comments.push({
+		posts.addComment(post.id, {
 			author: 'user',
 			body: $scope.body,
 			votes: 0
+		}).success(function(comment) {
+			$scope.post.comments.push(comment)
 		});
 		$scope.body = '';
 	}; 
 	// incrementVotes() - main.js
-	$scope.incrementVotes = incrementVotes; 
+	$scope.incrementVotes = function(comment, incDec) {
+		posts.commentVote(post, comment, incDec);
+	}; 
 };

@@ -2,14 +2,18 @@ class CommentsController < ApplicationController
 
 	def create
 		post = comments_post_find
-		comment = post.comments.create(params[:id])
+		comment = post.comments.create(comment_params)
 		respond_with post, comment
 	end
 
 	def vote
 		post = comments_post_find
-		comment = comments.find(params[:id])
-		respond_with post, comment.increment!(:vote)
+		comment = post.comments.find(params[:id])
+		if (params[:incDec] == 'inc')
+			respond_with post, comment.increment!(:votes)
+		else
+			respond_with post, comment.decrement!(:votes)
+		end
 	end
 
 	def comments_post_find
@@ -18,7 +22,7 @@ class CommentsController < ApplicationController
 
 	private
 	def comment_params 
-		params.require(:comment).permit(:body)
+		params.require(:comment).permit(:body, :votes)
 	end
 
 end
